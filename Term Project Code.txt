@@ -1,0 +1,780 @@
+#include <stdio.h>
+#define AVERAGE 6
+#define SUMMERSTART 171
+#define SUMMEREND 264
+#define INTERVALSTART 0
+#define INTERVALENDNINTEEN 365
+#define INTERVALENDTWENTY 366
+#define SWIMTHRESHOLD 20
+#define FREEZINGTHRESHOLD 0
+int elements = 366; // total number of elements in table
+int maxPos, minPos; // used in max_min function
+double des_return[AVERAGE]; // used in descending_sorter function
+//prints new lines (by stavros)
+void blank_print(){
+	printf("\n");
+}
+//prints splitters (by stavros)
+void line_print(){
+	printf("--------------------------------------------------------------------------------------------------------------------------- \n");
+}
+//introductory program data display
+void introduction(){
+	line_print();
+	printf("              CPS 188 - COMPUTER PROGRAMMING FUNDAMENTALS - TERM PROJECT - MAJOR LAKE TEMPERATURE OBSERVATIONS              \n");
+	printf("                             MADE BY AHSAAN RAHMAN, NILAVAN SELVAKUMAR, AND STAVROS CONDILIDIS                              \n");
+	printf("                                                        VERSION 3.3.6                                                       \n");
+	line_print();
+}
+//gets average of all lakes
+double lake_average(double arr[], int start, int end, int check) {
+    double total = 0;
+    double average = 0;
+    int increment;
+    int divisor;
+    
+    for(increment = start; increment < end; increment++) {
+        if(check == 1 && (increment > 78 && increment < 354)){
+			continue;
+		}
+        total = total + arr[increment];   
+    }
+    
+    if(check == 1){
+		divisor = 91;
+	}
+	else{
+		divisor = end - start;
+	}
+    
+    average =  total / divisor;
+    return average;
+}
+//sorts in descending order
+void descending_sorter(double arr1[]) {
+    double tmp;
+    int i, j;
+    for(i = 0; i < 6; i++) {
+        for(j = i+1; j < 6; j++) {
+            if(arr1[i] < arr1[j]) {
+                tmp = arr1[i];
+                arr1[i] = arr1[j];
+                arr1[j] = tmp;
+            }
+        }
+                des_return[i] = arr1[i];
+    }
+}
+//compares two arrays
+int compareArray(double firstArray[], double secondArray[]){
+	int i;
+	int count;
+	for(i = 0; i < 6; i++){
+		if(firstArray[i]!=secondArray[i]){
+		    count = 0;
+		} else {
+		    count = 1;
+		}
+	}
+	return count;
+}
+//gets max and min of an array
+void max_min(double arr[], int num) {
+    double maximum, minimum = 0;
+    maximum = minimum = arr[0];
+    for(int k = 0 ; k < num; k++) {
+        if (arr[k] > maximum) {
+            maximum = arr[k];
+            maxPos = k;
+        }
+        if (arr[k] < minimum) {
+            minimum = arr[k];
+            minPos = k;
+        }
+    }
+}
+
+//index of names
+void index_of_names(int num) {
+    switch (num) {
+    case 0:
+        printf("Lake Superior\n");
+    break;
+    case 1:
+        printf("Lake Michigan\n");  
+    break;
+    case 2:
+        printf("Lake Huron\n");  
+    break;
+    case 3:
+        printf("Lake Erie\n");     
+    break;
+    case 4:
+        printf("Lake Ontario\n");  
+    break;
+    case 5:
+        printf("Lake St. Clair\n");  
+    break;
+    }
+}
+//working date function by Stavros
+int date(int listDay, int *day){
+	int month;
+	if(listDay < 32){
+		month = 1;
+		*day = listDay;
+	}
+	else if(listDay < 61){
+		month = 2;
+		*day = listDay - 31;
+	}
+	else if(listDay < 92){
+		month = 3;
+		*day = listDay - 60;
+	}
+	else if(listDay < 122){
+		month = 4;
+		*day = listDay - 91;
+	}
+	else if(listDay < 153){
+		month = 5;
+		*day = listDay - 121;
+	}
+	else if(listDay < 183){
+		month = 6;
+		*day = listDay - 152;
+	}
+	else if(listDay < 214){
+		month = 7;
+		*day = listDay - 182;
+	}
+	else if(listDay < 245){
+		month = 8;
+		*day = listDay - 213;
+	}
+	else if(listDay < 275){
+		month = 9;
+		*day = listDay - 244;
+	}
+	else if(listDay < 306){
+		month = 10;
+		*day = listDay - 274;
+	}
+	else if(listDay < 336){
+		month = 11;
+		*day = listDay - 305;
+	}
+	else if(listDay < 367){
+		month = 12;
+		*day = listDay - 335;
+	}
+	return(month);
+}
+//gets the number of days for question 7
+int swim_comfort(double arr[], double num) {
+    int i;
+    int j = 0;
+    for (i = 0; i < elements; i++) {
+        if (arr[i] > num) {
+            j++;
+        }
+    }
+    return j;
+}
+//same function as the one above (swim_comfort) but with one symbol flipped, for Q8
+int below_zero(double arr[], double num) {
+    int i;
+    int m = 0;
+    for (i = 0; i < elements; i++) {
+        if (arr[i] < num) {
+            m++;
+        }
+    }
+    return m;
+}
+//finds overall warmest temperature of all lakes (by Stavros)
+void find_warmest(double s[], double m[], double h[], double e[], double o[], double c[], int maximumValue){
+	int lakeTempIncrement;
+	double placeholderWarm;
+	int lakeWarm;
+	int selectWarmLake;
+	int warmListValue;
+	int dayOfWarmth;
+	int monthOfWarmth;
+	int preventWarm = 0;
+	double warmTemp = 0;
+	for(lakeTempIncrement = 0; lakeTempIncrement < maximumValue; lakeTempIncrement++){
+		for(lakeWarm = 0; lakeWarm < AVERAGE; lakeWarm++){
+			if(lakeWarm == 0){
+				placeholderWarm = s[lakeTempIncrement];
+			}
+			else if(lakeWarm == 1){
+				placeholderWarm = m[lakeTempIncrement];
+			}
+			else if(lakeWarm == 2){
+				placeholderWarm = h[lakeTempIncrement];
+			}
+			else if(lakeWarm == 3){
+				placeholderWarm = e[lakeTempIncrement];
+			}
+			else if(lakeWarm == 4){
+				placeholderWarm = o[lakeTempIncrement];
+			}
+			else if (lakeWarm == 5){
+				placeholderWarm = c[lakeTempIncrement];
+			}
+			if(placeholderWarm > warmTemp){
+				warmTemp = placeholderWarm;
+				warmListValue = lakeTempIncrement;
+				selectWarmLake = lakeWarm;
+			}
+		}
+	}
+	if (selectWarmLake == 0){
+		printf("Lake Superior, the temperature being approximately \n%.2lf°C. The date(s) of warmest temperature are also, in the format of D/M:", warmTemp);
+	}
+	else if (selectWarmLake == 1){
+		printf("Lake Michigan, the temperature being approximately \n%.2lf°C. The date(s) of warmest temperature are also, in the format of D/M:", warmTemp);
+	}
+	else if (selectWarmLake == 2){
+		printf("Lake Huron, the temperature being approximately \n%.2lf°C. The date(s) of warmest temperature are also, in the format of D/M:", warmTemp);
+	}
+	else if (selectWarmLake == 3){
+		printf("Lake Erie, the temperature being approximately \n%.2lf°C. The date(s) of warmest temperature are also, in the format of D/M:", warmTemp);
+	}
+	else if (selectWarmLake == 4){
+		printf("Lake Ontario, the temperature being approximately \n%.2lf°C. The date(s) of warmest temperature are also, in the format of D/M:", warmTemp);
+	}
+	else if (selectWarmLake == 5){
+		printf("Lake St. Clair, the temperature being approximately \n%.2lf°C. The date(s) of warmest temperature are also, in the format of D/M:", warmTemp);
+	}
+	blank_print();
+	for(lakeTempIncrement = 0; lakeTempIncrement < maximumValue; lakeTempIncrement++){
+		for(lakeWarm = 0; lakeWarm < AVERAGE; lakeWarm++){
+			if(lakeWarm == 0){
+				placeholderWarm = s[lakeTempIncrement];
+			}
+			else if(lakeWarm == 1){
+				placeholderWarm = m[lakeTempIncrement];
+			}
+			else if(lakeWarm == 2){
+				placeholderWarm = h[lakeTempIncrement];
+			}
+			else if(lakeWarm == 3){
+				placeholderWarm = e[lakeTempIncrement];
+			}
+			else if(lakeWarm == 4){
+				placeholderWarm = o[lakeTempIncrement];
+			}
+			else if (lakeWarm == 5){
+				placeholderWarm = c[lakeTempIncrement];
+			}
+			
+			if(placeholderWarm == warmTemp){
+			    if(preventWarm != 0){
+					printf(", ");
+				}
+				warmListValue = lakeTempIncrement + 1;
+				monthOfWarmth = date(warmListValue, &dayOfWarmth);
+				printf("%d/%d", dayOfWarmth, monthOfWarmth);
+				preventWarm++;
+			}
+		}
+	}
+	printf(".");
+}
+//finds overall coldest temperature of all lakes (by Stavros)
+void find_coldest(double s[], double m[], double h[], double e[], double o[], double c[], int maximumValue){
+	int lakeTempIncrementCold;
+	double placeholderCold;
+	int lakeCold;
+	int selectColdLake;
+	int coldListValue;
+	int dayOfCold;
+	int monthOfCold;
+	int preventCold = 0;
+	double coldTemp = s[1];
+	for(lakeTempIncrementCold = 0; lakeTempIncrementCold < maximumValue; lakeTempIncrementCold++){
+		for(lakeCold = 0; lakeCold < AVERAGE; lakeCold++){
+			if(lakeCold == 0){
+				placeholderCold = s[lakeTempIncrementCold];
+			}
+			else if(lakeCold == 1){
+				placeholderCold = m[lakeTempIncrementCold];
+			}
+			else if(lakeCold == 2){
+				placeholderCold = h[lakeTempIncrementCold];
+			}
+			else if(lakeCold == 3){
+				placeholderCold = e[lakeTempIncrementCold];
+			}
+			else if(lakeCold == 4){
+				placeholderCold = o[lakeTempIncrementCold];
+			}
+			else if (lakeCold == 5){
+				placeholderCold = c[lakeTempIncrementCold];
+			}
+			if(placeholderCold < coldTemp){
+				coldTemp = placeholderCold;
+				coldListValue = lakeTempIncrementCold;
+				selectColdLake = lakeCold;
+			}
+		}
+	}
+	if (selectColdLake == 0){
+		printf("Lake Superior, the temperature being approximately %.2lf°C. The \ndate(s) of the coldest temperature are also, in the format of D/M:", coldTemp);
+	}
+	else if (selectColdLake == 1){
+		printf("Lake Michigan, the temperature being approximately %.2lf°C. The \ndate(s) of the coldest temperature are also, in the format of D/M:", coldTemp);
+	}
+	else if (selectColdLake == 2){
+		printf("Lake Huron, the temperature being approximately %.2lf°C. The \ndate(s) of the coldest temperature are also, in the format of D/M:", coldTemp);
+	}
+	else if (selectColdLake == 3){
+		printf("Lake Erie, the temperature being approximately %.2lf°C. The \ndate(s) of the coldest temperature are also, in the format of D/M:", coldTemp);
+	}
+	else if (selectColdLake == 4){
+		printf("Lake Ontario, the temperature being approximately %.2lf°C. The \ndate(s) of the coldest temperature are also, in the format of D/M:", coldTemp);
+	}
+	else if (selectColdLake == 5){
+		printf("Lake St. Clair, the temperature being approximately %.2lf°C. The \ndate(s) of the coldest temperature are also, in the format of D/M:", coldTemp);
+	}
+	blank_print();
+	for(lakeTempIncrementCold = 0; lakeTempIncrementCold < maximumValue; lakeTempIncrementCold++){
+		for(lakeCold = 0; lakeCold < AVERAGE; lakeCold++){
+			if(lakeCold == 0){
+				placeholderCold = s[lakeTempIncrementCold];
+			}
+			else if(lakeCold == 1){
+				placeholderCold = m[lakeTempIncrementCold];
+			}
+			else if(lakeCold == 2){
+				placeholderCold = h[lakeTempIncrementCold];
+			}
+			else if(lakeCold == 3){
+				placeholderCold = e[lakeTempIncrementCold];
+			}
+			else if(lakeCold == 4){
+				placeholderCold = o[lakeTempIncrementCold];
+			}
+			else if (lakeCold == 5){
+				placeholderCold = c[lakeTempIncrementCold];
+			}
+			
+			if(placeholderCold == coldTemp){
+			    if(preventCold != 0){
+					printf(", ");
+				}
+				coldListValue = lakeTempIncrementCold + 1;
+				monthOfCold = date(coldListValue, &dayOfCold);
+				printf("%d/%d", dayOfCold, monthOfCold);
+				preventCold++;
+			}
+		}
+	}
+	printf(".");
+}
+//finds coldest temperature of each lake and all their dates (by Stavros)
+void coldest_temp(double observedColdLake[], int daysOfColdObservation){
+	int dayProgressCold;
+	int k = 1;
+	double tempColdest = 1000000;
+	int coldestDays[daysOfColdObservation];
+	int coldDateMonth;
+	int coldDateDay;
+	for(dayProgressCold = 0; dayProgressCold < daysOfColdObservation; dayProgressCold++){
+		coldestDays[dayProgressCold] = 0;
+	}
+	for(dayProgressCold = 0; dayProgressCold < daysOfColdObservation; dayProgressCold++){
+		if(tempColdest > observedColdLake[dayProgressCold]){
+			tempColdest = observedColdLake[dayProgressCold];
+			coldestDays[0] = dayProgressCold + 1;
+		}
+	}
+	for(dayProgressCold = 0; dayProgressCold < daysOfColdObservation; dayProgressCold++){
+		if(observedColdLake[dayProgressCold] == tempColdest && dayProgressCold != coldestDays[0]-1){
+			coldestDays[k] = dayProgressCold + 1;
+			k++;
+		}
+	}
+	printf("%.2lf°C\n", tempColdest);
+	printf("Date(s) of Coldest Temperature: ");
+	for(dayProgressCold = 0; dayProgressCold < daysOfColdObservation; dayProgressCold++){
+		if(coldestDays[dayProgressCold] == 0 && dayProgressCold != 0){
+			break;
+		}
+		coldDateMonth = date(coldestDays[dayProgressCold], &coldDateDay);
+		printf("%d/%d ", coldDateDay, coldDateMonth);
+	}
+}
+//finds warmest temperature of each lake and all their dates (by Stavros)
+void warmest_temp(double observedWarmLake[], int daysOfWarmObservation){
+	int dayProgressWarm;
+	int j = 1;
+	double tempWarmest = 0;
+	int warmestDays[daysOfWarmObservation];
+	int warmDateMonth;
+	int warmDateDay;
+	for(dayProgressWarm = 0; dayProgressWarm < daysOfWarmObservation; dayProgressWarm++){
+		warmestDays[dayProgressWarm] = 0;
+	}
+	for(dayProgressWarm = 0; dayProgressWarm < daysOfWarmObservation; dayProgressWarm++){
+		if(tempWarmest < observedWarmLake[dayProgressWarm]){
+			tempWarmest = observedWarmLake[dayProgressWarm];
+			warmestDays[0] = dayProgressWarm + 1;
+		}
+	}
+	for(dayProgressWarm = 0; dayProgressWarm < daysOfWarmObservation; dayProgressWarm++){
+		if(observedWarmLake[dayProgressWarm] == tempWarmest && dayProgressWarm != warmestDays[0]-1){
+			warmestDays[j] = dayProgressWarm + 1;
+			j++;
+		}
+	}
+	printf("%.2lf°C\n", tempWarmest);
+	printf("Date(s) of Warmest Temperature: ");
+	for(dayProgressWarm = 0; dayProgressWarm < daysOfWarmObservation; dayProgressWarm++){
+		if(warmestDays[dayProgressWarm] == 0 && dayProgressWarm != 0){
+			break;
+		}
+		warmDateMonth = date(warmestDays[dayProgressWarm], &warmDateDay);
+		printf("%d/%d ", warmDateDay, warmDateMonth);
+	}
+}
+int main() {
+    int winter_confirm = 0;
+    introduction();
+    printf("Hi, there! Hope you're doing well! Did you know that the NOAA (National Oceanic and Atmospheric Administration), which is \nbased in the United States, completes annual studies of the Daily Lake Average Surface Water Temperatures of six different \nlakes (Ontario, Erie, Huron, Michigan, Superior, and St. Clair) in North America? Pretty cool, right? Well, today, we're \ngoing to give you (yes, you!) the opportunity to explore some of this organization's observations and findings during the \nyears of 2019 and 2020. Are you ready? Perfect! Simply navigate to any of the individual responses given below!\n");
+    int year[elements], day[elements]; 
+    double superior[elements], michigan[elements], huron[elements], erie[elements], ontario[elements], clair[elements]; //main arrays that contain core information
+    FILE *fp = fopen("Term Project Data.txt", "r");
+    while(!feof(fp)) {
+        for (int i = 0; i < elements; i++) {    // stores all data from file into main arrays and prints out a list
+            fscanf (fp, "%d", &year[i]);
+            fscanf(fp, "%d", &day[i]);          // Index 0 in day[i] is day 1
+            fscanf(fp, "%lf", &superior[i]);
+            fscanf(fp, "%lf", &michigan[i]);
+            fscanf(fp, "%lf", &huron[i]);
+            fscanf(fp, "%lf", &erie[i]);
+            fscanf(fp, "%lf", &ontario[i]);
+            fscanf(fp, "%lf", &clair[i]);
+        }
+    }
+    //QUESTION 1
+    double avg_sup, avg_mic, avg_hur, avg_eri, avg_ont, avg_cla, avg_total;
+    int tot_start = 0;
+    int tot_end = elements;
+    avg_sup = lake_average(superior, tot_start, tot_end, winter_confirm);
+    avg_mic = lake_average(michigan, tot_start, tot_end, winter_confirm);
+    avg_hur = lake_average(huron, tot_start, tot_end, winter_confirm);
+    avg_eri = lake_average(erie, tot_start, tot_end, winter_confirm);
+    avg_ont = lake_average(ontario, tot_start, tot_end, winter_confirm);
+    avg_cla = lake_average(clair, tot_start, tot_end, winter_confirm);
+    avg_total = (avg_sup + avg_mic + avg_hur + avg_eri + avg_ont + avg_cla)/AVERAGE;
+    printf("\n--------------------------------------------------------------------------------------------------------\n");
+    printf("\nQ1. Average of each lake and the average of all the lakes combined.\n");
+    printf("Temperature Average for Superior: %.2lf°C\n", avg_sup);
+    printf("Temperature Average for Michigan: %.2lf°C\n", avg_mic);
+    printf("Temperature Average for Huron: %.2lf°C\n", avg_hur);
+    printf("Temperature Average for Erie: %.2lf°C\n", avg_eri);
+    printf("Temperature Average for Ontario: %.2lf°C\n", avg_ont);
+    printf("Temperature Average for St. Clair: %.2lf°C\n", avg_cla);
+    printf("Combined Average of all the Lakes: %.2lf°C\n", avg_total);
+    //shows yearly averages in descending order
+    double descending_yearly[AVERAGE] = {avg_sup, avg_mic, avg_hur, avg_eri, avg_ont, avg_cla};
+    descending_sorter(descending_yearly);
+    double temporary1;
+    double arr_set_year[AVERAGE];
+    printf("\nYearly Averages Sorted in Descending Order:\n");
+    for (int h = 0; h < AVERAGE; h++) {
+        temporary1 = des_return[h];
+        printf("%.2lf°C ", temporary1);
+        if (temporary1 == avg_sup) {
+            printf("Lake Superior\n");
+            arr_set_year[h] = 0;
+        } else if (temporary1 == avg_mic) {
+            printf("Lake Michigan\n");
+            arr_set_year[h] = 1;
+        } else if (temporary1 == avg_hur) {
+            printf("Lake Huron\n");
+            arr_set_year[h] = 2;
+        } else if (temporary1 == avg_eri) {
+            printf("Lake Erie\n");
+            arr_set_year[h] = 3;
+        } else if (temporary1 == avg_ont) {
+            printf("Lake Ontario\n");
+            arr_set_year[h] = 4;
+        } else if (temporary1 == avg_cla) {
+            printf("Lake St. Clair\n");
+            arr_set_year[h] = 5;
+        }
+    }
+    line_print();
+    //QUESTION 2
+    double high_low[AVERAGE] = {avg_sup, avg_mic, avg_hur, avg_eri, avg_ont, avg_cla};
+    printf("\nQ2. Coldest and Warmest Lakes. And which lakes are above average, and which are below average.\n");
+        //Finds max/min index and gets the correct if statement
+    max_min(high_low, AVERAGE);
+    printf("The warmest lake is:\n");
+    index_of_names(maxPos);
+    printf("The coldest lake is:\n");
+    index_of_names(minPos);
+    printf("\n");
+        //Below Avg & Above Avg stuff here
+    printf("Above Average Lakes are:\n");
+    for (int j = 0; j < AVERAGE; j++) {
+        if(high_low[j] > avg_total) {
+            index_of_names(j);
+        }
+    }
+    printf("\nBelow Average Lakes are:\n");
+    for (int j = 0; j < AVERAGE; j++) {
+        if(high_low[j] < avg_total) {
+            index_of_names(j);
+        }
+    }
+    //QUESTION 3 (by Stavros)
+    line_print();
+    printf("\nQ3. Warmest and Coldest Temperature for each lake, and their date(s).\n\n");
+	printf("The coldest lake temperatures (and the dates on which they occurred in the format D/M) during this year were \nas follows:\n\n");
+	printf("Lake Superior: ");
+	coldest_temp(superior, elements);
+	blank_print();
+	blank_print();
+	printf("Lake Michigan: ");
+	coldest_temp(michigan, elements);
+	blank_print();
+	blank_print();
+	printf("Lake Huron: ");
+	coldest_temp(huron, elements);
+	blank_print();
+	blank_print();
+	printf("Lake Erie: ");
+	coldest_temp(erie, elements);
+	blank_print();
+	blank_print();
+	printf("Lake Ontario: ");
+	coldest_temp(ontario, elements);
+	blank_print();
+	blank_print();
+	printf("Lake St. Clair: ");
+	coldest_temp(clair, elements);
+	blank_print();
+	blank_print();
+	printf("Additionally, the warmest lake temperatures (and the dates on which they occurred in the format D/M) during this year were \nas follows:\n\n");
+	printf("Lake Superior: ");
+	warmest_temp(superior, elements);
+	blank_print();
+	blank_print();
+	printf("Lake Michigan: ");
+	warmest_temp(michigan, elements);
+	blank_print();
+	blank_print();
+	printf("Lake Huron: ");
+	warmest_temp(huron, elements);
+	blank_print();
+	blank_print();
+	printf("Lake Erie: ");
+	warmest_temp(erie, elements);
+	blank_print();
+	blank_print();
+	printf("Lake Ontario: ");
+	warmest_temp(ontario, elements);
+	blank_print();
+	blank_print();
+	printf("Lake St. Clair: ");
+	warmest_temp(clair, elements);
+	blank_print();
+	blank_print();
+    //QUESTION 4 (by Stavros)
+    line_print();
+	printf("Q4. Find the overall warmest and coldest temperature of all the lakes, and what date(s) they occurred at.\n");
+	printf("\nIt appears as though the warmest temperature recorded applied to ");	
+	find_warmest(superior, michigan, huron, erie, ontario, clair, elements);	
+	blank_print();
+	blank_print();	
+	printf("Additionally, the coldest temperature recorded applied to ");	
+	find_coldest(superior, michigan, huron, erie, ontario, clair, elements);			
+	blank_print();
+    //QUESTION 5 
+    line_print();
+    printf("\nQ5. Summer Average Temperature per lake (Day 172 to 265) and display from warmest to coldest.\n\n");
+    double sum_avg_sup, sum_avg_mic, sum_avg_hur, sum_avg_eri, sum_avg_ont, sum_avg_cla;
+    double temporary2;
+    sum_avg_sup = lake_average(superior, SUMMERSTART, SUMMEREND, winter_confirm);
+    sum_avg_mic = lake_average(michigan, SUMMERSTART, SUMMEREND, winter_confirm);
+    sum_avg_hur = lake_average(huron, SUMMERSTART, SUMMEREND, winter_confirm);
+    sum_avg_eri = lake_average(erie, SUMMERSTART, SUMMEREND, winter_confirm);
+    sum_avg_ont = lake_average(ontario, SUMMERSTART, SUMMEREND, winter_confirm);
+    sum_avg_cla = lake_average(clair, SUMMERSTART, SUMMEREND, winter_confirm);
+    printf("Summer Average Temperature for Superior: %.2lf°C\n", sum_avg_sup);
+    printf("Summer Average Temperature for Michigan: %.2lf°C\n", sum_avg_mic);
+    printf("Summer Average Temperature for Huron: %.2lf°C\n", sum_avg_hur);
+    printf("Summer Average Temperature for Erie: %.2lf°C\n", sum_avg_eri);
+    printf("Summer Average Temperature for Ontario: %.2lf°C\n", sum_avg_ont);
+    printf("Summer Average Temperature for St. Clair: %.2lf°C\n", sum_avg_cla);
+    //sorting in descending order
+    double descending_summer[6] = {sum_avg_sup, sum_avg_mic, sum_avg_hur, sum_avg_eri, sum_avg_ont, sum_avg_cla};
+    descending_sorter(descending_summer);
+    double arr_set_sum[6];
+    printf("\nSummer Averages Sorted in Descending Order:\n");
+    for (int h = 0; h < 6; h++) {
+        temporary2 = des_return[h];
+        printf("%.2lf°C ", temporary2);
+        if (temporary2 == sum_avg_sup) {
+            printf("Lake Superior\n");
+            arr_set_sum[h] = 0;
+        } else if (temporary2 == sum_avg_mic) {
+            printf("Lake Michigan\n");
+            arr_set_sum[h] = 1;
+        } else if (temporary2 == sum_avg_hur) {
+            printf("Lake Huron\n");
+            arr_set_sum[h] = 2;
+        } else if (temporary2 == sum_avg_eri) {
+            printf("Lake Erie\n");
+            arr_set_sum[h] = 3;
+        } else if (temporary2 == sum_avg_ont) {
+            printf("Lake Ontario\n");
+            arr_set_sum[h] = 4;
+        } else if (temporary2 == sum_avg_cla) {
+            printf("Lake St. Clair\n");
+            arr_set_sum[h] = 5;
+        }
+    }
+    if (compareArray(arr_set_sum, arr_set_year) == 1) {
+        printf("Order is the same as Yearly Average.\n");
+    } else {
+        printf("Order is different from the Yearly Average.\n");
+    }
+    line_print();
+    //QUESTION 6
+    winter_confirm = 1;
+    printf("\nQ6. Winter Average Temperature per lake (Day 1 to 79 and 355 to 365) and display from warmest to coldest.\n\n");
+    double win_avg_sup, win_avg_mic, win_avg_hur, win_avg_eri, win_avg_ont, win_avg_cla;
+    double temporary3;
+    //first set of days
+    win_avg_sup = lake_average(superior, INTERVALSTART, INTERVALENDTWENTY, winter_confirm);
+    win_avg_mic = lake_average(michigan, INTERVALSTART, INTERVALENDTWENTY, winter_confirm);
+    win_avg_hur = lake_average(huron, INTERVALSTART, INTERVALENDTWENTY, winter_confirm);
+    win_avg_eri = lake_average(erie, INTERVALSTART, INTERVALENDTWENTY, winter_confirm);
+    win_avg_ont = lake_average(ontario, INTERVALSTART, INTERVALENDTWENTY, winter_confirm);
+    win_avg_cla = lake_average(clair, INTERVALSTART, INTERVALENDTWENTY, winter_confirm);
+    printf("Winter Average Temperature for Superior: %.2lf°C\n", win_avg_sup);
+    printf("Winter Average Temperature for Michigan: %.2lf°C\n", win_avg_mic);
+    printf("Winter Average Temperature for Huron: %.2lf°C\n", win_avg_hur);
+    printf("Winter Average Temperature for Erie: %.2lf°C\n", win_avg_eri);
+    printf("Winter Average Temperature for Ontario: %.2lf°C\n", win_avg_ont);
+    printf("Winter Average Temperature for St. Clair: %.2lf°C\n", win_avg_cla);
+    //sorts in descending order
+    double descending_winter[6] = {win_avg_sup, win_avg_mic, win_avg_hur, win_avg_eri, win_avg_ont, win_avg_cla};
+    descending_sorter(descending_winter);
+    double arr_set_win[6];
+    printf("\nWinter Averages Sorted in Descending Order:\n");
+    for (int h = 0; h < 6; h++) {
+        temporary3 = des_return[h];
+        printf("%.2lf ", temporary3);
+        if (temporary3 == win_avg_sup) {
+            printf("Lake Superior\n");
+            arr_set_win[h] = 0;
+        } else if (temporary3 == win_avg_mic) {
+            printf("Lake Michigan\n");
+            arr_set_win[h] = 1;
+        } else if (temporary3 == win_avg_hur) {
+            printf("Lake Huron\n"); 
+            arr_set_win[h] = 2;
+        } else if (temporary3 == win_avg_eri) {
+            printf("Lake Erie\n");
+            arr_set_win[h] = 3;
+        } else if (temporary3 == win_avg_ont) {
+            printf("Lake Ontario\n");
+            arr_set_win[h] = 4;
+        } else if (temporary3 == win_avg_cla) {
+            printf("Lake St. Clair\n");
+            arr_set_win[h] = 5;
+        }
+    }
+    if (compareArray(arr_set_win, arr_set_year) == 1) {
+        printf("Order is the same as Yearly Average.\n");
+    } else {
+        printf("Order is different from the Yearly Average.\n");
+    }
+    winter_confirm = 0;
+    line_print();
+    //QUESTION 7
+    printf("\nQ7. Number of days in which each lake is above 20 degrees.\n\n");
+    int sup_swim = swim_comfort(superior, SWIMTHRESHOLD);
+    printf("You are able to swim comfortably for %d days(s) of a year in Lake Superior.\n", sup_swim);
+    int mic_swim = swim_comfort(michigan, SWIMTHRESHOLD);
+    printf("You are able to swim comfortably for %d day(s) of the year in Lake Michigan.\n", mic_swim);
+    int hur_swim = swim_comfort(huron, SWIMTHRESHOLD);
+    printf("You are able to swim comfortably for %d day(s) of the year in Lake Huron.\n", hur_swim);
+    int eri_swim = swim_comfort(erie, SWIMTHRESHOLD);
+    printf("You are able to swim comfortably for %d day(s) of the year in Lake Erie.\n", eri_swim);
+    int ont_swim = swim_comfort(ontario, SWIMTHRESHOLD);
+    printf("You are able to swim comfortably for %d day(s) of the year in Lake Ontario.\n", ont_swim);
+    int cla_swim = swim_comfort(clair, SWIMTHRESHOLD);
+    printf("You are able to swim comfortably for %d day(s) of the year in Lake St. Clair.\n", cla_swim);
+    line_print();
+    //QUESTION 8
+    printf("\nQ8. Number of days in which each lake is below 0 degrees.\n\n");
+    int sup_frozen = below_zero(superior, 0);
+    printf("Lake Superior is frozen for %d days of a year.\n", sup_frozen);
+    int mic_frozen = below_zero(michigan, 0);
+    printf("Lake Michigan is frozen for %d days of a year.\n", mic_frozen);
+    int hur_frozen = below_zero(huron, 0);
+    printf("Lake Huron is frozen for %d days of a year.\n", hur_frozen);
+    int eri_frozen = below_zero(erie, 0);
+    printf("Lake Erie is frozen for %d days of a year.\n", eri_frozen);
+    int ont_frozen = below_zero(ontario, 0);
+    printf("Lake Ontario is frozen for %d days of a year.\n", ont_frozen);
+    int cla_frozen = below_zero(clair, 0);
+    printf("Lake St. Clair is frozen for %d days of a year.\n", cla_frozen);
+    line_print();
+    //QUESTION 9 (by Stavros)
+    printf("\nQ9. Comparing 2020 data versus 2019 data, and their averages.\n\n");
+    int previous_year[elements], previous_day[elements];
+    double superior_2019[elements], michigan_2019[elements], huron_2019[elements], erie_2019[elements], ontario_2019[elements], clair_2019[elements];
+    double avg_sup_2019, avg_mic_2019, avg_hur_2019, avg_eri_2019, avg_ont_2019, avg_cla_2019, avg_total_2019;
+    FILE *fp_2019 = fopen("Term Project Data (2019).txt", "r");
+    while(!feof(fp_2019)) {
+		for (int t = 0; t < elements; t++) {
+			fscanf(fp_2019, "%d", &previous_year[t]);
+			fscanf(fp_2019, "%d", &previous_day[t]);
+			fscanf(fp_2019, "%lf", &superior_2019[t]);
+			fscanf(fp_2019, "%lf", &michigan_2019[t]);
+			fscanf(fp_2019, "%lf", &huron_2019[t]);
+			fscanf(fp_2019, "%lf", &erie_2019[t]);
+			fscanf(fp_2019, "%lf", &ontario_2019[t]);
+			fscanf(fp_2019, "%lf", &clair_2019[t]);
+		}
+	}
+	avg_sup_2019 = lake_average(superior_2019, INTERVALSTART, INTERVALENDNINTEEN, winter_confirm);
+    avg_mic_2019 = lake_average(michigan_2019, INTERVALSTART, INTERVALENDNINTEEN, winter_confirm);
+	avg_hur_2019 = lake_average(huron_2019, INTERVALSTART, INTERVALENDNINTEEN, winter_confirm);
+	avg_eri_2019 = lake_average(erie_2019, INTERVALSTART, INTERVALENDNINTEEN, winter_confirm);
+	avg_ont_2019 = lake_average(ontario_2019, INTERVALSTART, INTERVALENDNINTEEN, winter_confirm);
+	avg_cla_2019 = lake_average(clair_2019, INTERVALSTART, INTERVALENDNINTEEN, winter_confirm);
+	avg_total_2019 = (avg_sup_2019 + avg_mic_2019 + avg_hur_2019 + avg_eri_2019 + avg_ont_2019 + avg_cla_2019)/6;
+    printf("Average for 2019 Superior: %.2lf°C\n", avg_sup_2019);
+	printf("Average for 2019 Michigan: %.2lf°C\n", avg_mic_2019);
+	printf("Average for 2019 Huron: %.2lf°C\n", avg_hur_2019);
+	printf("Average for 2019 Erie: %.2lf°C\n", avg_eri_2019);
+	printf("Average for 2019 Ontario: %.2lf°C\n", avg_ont_2019);
+	printf("Average for 2019 St. Clair: %.2lf°C\n", avg_cla_2019);
+	printf("Combined Average of all the Lakes: %.2lf°C\n", avg_total_2019);
+	printf("\nA side-by-side comparison of these yearly averages in the years of 2019 and 2020 is listed below:\n");
+	printf("________________________________|2019(°C)|____________|2020(°C)|______\n");
+	blank_print();
+	printf("Lake Superior                     %.2lf                   %.2lf\n", avg_sup_2019, avg_sup);
+	printf("Lake Michigan                     %.2lf                   %.2lf\n", avg_mic_2019, avg_mic);
+	printf("Lake Huron                        %.2lf                   %.2lf\n", avg_hur_2019, avg_hur);
+	printf("Lake Erie                         %.2lf                  %.2lf\n", avg_eri_2019, avg_eri);
+	printf("Lake Ontario                      %.2lf                   %.2lf\n", avg_ont_2019, avg_ont);
+	printf("Lake St. Clair                    %.2lf                  %.2lf\n", avg_cla_2019, avg_cla);
+	printf("________________________________________________________________________\n");
+	printf("Total Lake Average                %.2lf                   %.2lf", avg_total_2019, avg_total);
+	printf("\n________________________________________________________________________\n");
+	blank_print();
+	line_print();
+	fclose(fp_2019);
+	fclose(fp);
+}
